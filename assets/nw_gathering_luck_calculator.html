@@ -1,0 +1,382 @@
+<html>
+<head>
+<img src="https://styles.redditmedia.com/t5_3gmxe/styles/communityIcon_7ra2iqncn8641.jpg" alt="nw" style="margin: -6% 40%;" width="20%"/>
+<hr><hr>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.5.1/math.js"></script>
+<script>
+  function ressCount() {
+    var simuList = document.getElementById("simuList");
+    var isGatherNode = simuList.options[simuList.selectedIndex].value == "0"
+    if (isGatherNode) {
+      if (document.getElementById("ressMin").value > 5e3)
+        document.getElementById("ressMin").value = 5e3;
+    }
+    else {
+      if (document.getElementById("ressMin").value > 100)
+        document.getElementById("ressMin").value = 100;
+    }
+    if (document.getElementById("ressMin").value < 1)
+      document.getElementById("ressMin").value = 1;
+      
+    computeBernoulli()
+  }
+  function tierSelection() {
+    var tierList = document.getElementById("tierList");
+    var ressMinRol = tierList.options[tierList.selectedIndex].value
+    // so user can customize min ROL
+    if (tierList.selectedIndex != 0){
+      document.getElementById("ressMinRol").value = ressMinRol;
+    }
+    computeBernoulli()
+  }
+  function computeLevelLuck() {
+    if (document.getElementById("gatheringLevel").value > 200)
+      document.getElementById("gatheringLevel").value = 200;
+    if (document.getElementById("gatheringLevel").value < 0)
+      document.getElementById("gatheringLevel").value = 0;
+    var gatheringLevel = document.getElementById("gatheringLevel").value;
+
+    document.getElementById("levelRolBonus").value = 10*gatheringLevel;
+    computeBernoulli()
+  }
+  function computeFoodLuck() {
+  	var foodList = document.getElementById("foodList");
+    var foodRolBonus = foodList.options[foodList.selectedIndex].value
+    
+    document.getElementById("foodRolBonus").value = foodRolBonus;
+    computeBernoulli()
+  }
+  function computeToolLuck() {
+    if (document.getElementById("toolGatherLuck").value > 9.4)
+      document.getElementById("toolGatherLuck").value = 9.4;
+    if (document.getElementById("toolGatherLuck").value < 0)
+      document.getElementById("toolGatherLuck").value = 0;
+    var toolGatherLuck = document.getElementById("toolGatherLuck").value;
+
+    // additionnal division after output from the from the nw database forum
+    document.getElementById("toolRolBonus").value = 100000*toolGatherLuck/(100*10);
+    computeBernoulli()
+  }
+  function computeArmorLuck() {
+    if (document.getElementById("armorGatherLuck").value > 47.5)
+      document.getElementById("armorGatherLuck").value = 47.5;
+    if (document.getElementById("armorGatherLuck").value < 0)
+      document.getElementById("armorGatherLuck").value = 0;
+    var armorGatherLuck = document.getElementById("armorGatherLuck").value;
+
+    // additionnal division after output from the from the nw database forum
+    document.getElementById("armorRolBonus").value = 100000*armorGatherLuck/(100*10);
+    computeBernoulli()
+  }
+  function computeAmuletLuck() {
+    if (document.getElementById("amuletGatherLuck").value > 9.5)
+      document.getElementById("amuletGatherLuck").value = 9.5;
+    if (document.getElementById("amuletGatherLuck").value < 0)
+      document.getElementById("amuletGatherLuck").value = 0;
+    var amuletGatherLuck = document.getElementById("amuletGatherLuck").value;
+
+    // additionnal division after output from the from the nw database forum
+    document.getElementById("amuletRolBonus").value = 100000*amuletGatherLuck/(100*10);
+    computeBernoulli()
+  }
+  function computeTrophyLuck() {
+  	var trophyList1 = document.getElementById("trophyHouse1");
+    var trophyList2 = document.getElementById("trophyHouse2");
+    var trophyList3 = document.getElementById("trophyHouse3");
+    var trophyRolBonus1 = trophyList1.options[trophyList1.selectedIndex].value
+    var trophyRolBonus2 = trophyList2.options[trophyList2.selectedIndex].value
+    var trophyRolBonus3 = trophyList3.options[trophyList3.selectedIndex].value
+    
+    document.getElementById("trophyRolBonus").value = +trophyRolBonus1 + +trophyRolBonus2 + +trophyRolBonus3;
+    computeBernoulli()
+  }
+  function checkTerritoryBonus() {
+    var checkbox = document.getElementById("territoryBonus");
+    var territoryRolBonus = 0; 
+    
+    if(checkbox.checked)
+      territoryRolBonus = 50;  
+    document.getElementById("territoryRolBonus").value = territoryRolBonus;
+    computeBernoulli()
+  }
+  function checkPvpBonus() {
+    var checkbox = document.getElementById("pvpBonus");
+    var pvpRolBonus = 0; 
+    
+    if(checkbox.checked)
+      pvpRolBonus = 100000*30/(100*10);  
+    document.getElementById("pvpRolBonus").value = pvpRolBonus;
+    computeBernoulli()
+  }
+  function resetInput() {
+    document.getElementById("simuList").selectedIndex = 0;
+    document.getElementById("tierList").selectedIndex = 0;
+    document.getElementById("ressMin").value = 1;
+    document.getElementById("ressMinRol").value = 0;
+    document.getElementById("gatheringLevel").value = 0;
+    document.getElementById("foodList").selectedIndex = 0;
+    document.getElementById("toolGatherLuck").value = 0;
+    document.getElementById("armorGatherLuck").value = 0;
+    document.getElementById("amuletGatherLuck").value = 0;
+    document.getElementById("trophyHouse1").selectedIndex = 0;
+    document.getElementById("trophyHouse2").selectedIndex = 0;
+    document.getElementById("trophyHouse3").selectedIndex = 0;
+    document.getElementById("territoryBonus").checked = 0;
+    document.getElementById("pvpBonus").checked = 0;
+    document.getElementById("miscRolBonus").value = 0;
+
+    tierSelection();
+    computeLevelLuck();
+    computeFoodLuck();
+    computeToolLuck();
+    computeArmorLuck();
+    computeAmuletLuck();
+    computeTrophyLuck()
+    checkTerritoryBonus();
+    checkPvpBonus();
+    document.getElementById("resultNBernoulli").innerHTML = "";
+  }
+  function populateTable(){
+    var table = document.getElementById("recapTable");
+    var levelRolBonus = document.getElementById("levelRolBonus").value;
+    var foodRolBonus = document.getElementById("foodRolBonus").value;
+    var toolRolBonus = document.getElementById("toolRolBonus").value;
+    var armorRolBonus = document.getElementById("armorRolBonus").value;
+    var amuletRolBonus = document.getElementById("amuletRolBonus").value;
+    var trophyRolBonus = document.getElementById("trophyRolBonus").value;
+    var territoryRolBonus = document.getElementById("territoryRolBonus").value;
+    var pvpRolBonus = document.getElementById("pvpRolBonus").value;
+    var miscRolBonus = document.getElementById("miscRolBonus").value;
+    var totalRolBonus = +levelRolBonus + +foodRolBonus + +toolRolBonus + +armorRolBonus + +amuletRolBonus + +trophyRolBonus + +territoryRolBonus + +pvpRolBonus + +miscRolBonus
+
+    var cells = table.rows.item(1).cells;
+    cells.item(1).innerHTML = levelRolBonus;
+    cells.item(2).innerHTML = foodRolBonus;
+    cells.item(3).innerHTML = toolRolBonus;
+    cells.item(4).innerHTML = armorRolBonus;
+    cells.item(5).innerHTML = amuletRolBonus;
+    cells.item(6).innerHTML = trophyRolBonus;
+    cells.item(7).innerHTML = territoryRolBonus;
+    cells.item(8).innerHTML = pvpRolBonus;
+    cells.item(9).innerHTML = miscRolBonus;
+    cells.item(10).innerHTML = totalRolBonus;
+  }
+  function computeBernoulli() {
+    var simuList = document.getElementById("simuList");
+    var isGatherNode = simuList.options[simuList.selectedIndex].value == "0"
+    var tierList = document.getElementById("tierList");
+    var ressMin = document.getElementById("ressMin").value;
+    var ressMinRol = document.getElementById("ressMinRol").value;
+    var levelRolBonus = document.getElementById("levelRolBonus").value;
+    var foodRolBonus = document.getElementById("foodRolBonus").value;
+    var toolRolBonus = document.getElementById("toolRolBonus").value;
+    var armorRolBonus = document.getElementById("armorRolBonus").value;
+    var amuletRolBonus = document.getElementById("amuletRolBonus").value;
+    var trophyRolBonus = document.getElementById("trophyRolBonus").value;
+    var territoryRolBonus = document.getElementById("territoryRolBonus").value;
+    var pvpRolBonus = document.getElementById("pvpRolBonus").value;
+    var miscRolBonus = document.getElementById("miscRolBonus").value;
+    var maxTrueRol = 1e5;
+    let htmlOutput = "";
+    populateTable();
+
+    var totalRolBonus = +levelRolBonus + +foodRolBonus + +toolRolBonus + +armorRolBonus + +amuletRolBonus + +trophyRolBonus + +territoryRolBonus + +pvpRolBonus + +miscRolBonus
+    var maxRol = maxTrueRol + totalRolBonus
+    var probTrue = (maxRol - ressMinRol)/(maxTrueRol)
+    if (probTrue > 1){
+      probTrue = 1
+    }
+
+    document.getElementById("resultNBernoulli").innerHTML = ""
+    if (ressMinRol > maxRol) {
+      var diffRol = ressMinRol - maxRol;
+      htmlOutput =
+        "<p style=\"color: red\"> Shame! Shame! Shame, you <b>cannot collect this " 
+        + tierList.options[tierList.selectedIndex].text + "</b> ressource! <br> You <b> lack " + diffRol + " ROL </b>. &nbsp;&nbsp;&nbsp; :'( </p> <hr style=\"margin: -3%\">";
+    }
+
+    else{
+      // Bernoulli with a loop to avoid infinite loops
+      let maxTries = 1e3;
+      let bernoulliProb = 0.;
+      let n = -1;
+      let k = 0;
+      let minTries = ressMin;
+      let maxSuccess = ressMin;
+      let probSuccess = false;
+      let nSuccess = 0.;
+      if (isGatherNode)
+        maxTries = +ressMin + 1;
+
+      console.log("-- start --");
+      for (n = minTries; n < maxTries; n++) {
+        bernoulliProb = 0.
+        for (k = 0; k < maxSuccess; k++) {
+          bernoulliProb = (math.combinations(n, k) * math.pow(probTrue, k) * math.pow(1 - probTrue, n - k)) + bernoulliProb;
+          probSuccess = bernoulliProb < (0.05 - 1e-6)
+          // console.log("#" + n + "            k: " + k + ";   p: " + bernoulliProb.toFixed(3));
+          if (isGatherNode & probSuccess)
+            nSuccess = (+nSuccess + 1);
+        }
+        if (probSuccess)
+          break;
+      }
+      htmlOutput = 
+      "<p style=\"color: green\"> You have <b>" + (100*probTrue).toFixed(2) + "% </b> chance to gather the <b>" 
+      + tierList.options[tierList.selectedIndex].text + " ressource per node</b>!<br>";
+      if (isGatherNode) {
+        htmlOutput = htmlOutput + "95% probability to get <b> " + nSuccess + "</b> ressource(s) after gathering <b> at least " + ressMin;
+      }
+      else{
+        if (n < maxTries){
+          htmlOutput = htmlOutput + "95% probability to get <b>at least " + ressMin + "</b> ressource(s) after gathering <b>" + n;
+        }
+        else{
+          htmlOutput = htmlOutput + "95% probability to get <b>at least " + ressMin + "</b> ressource(s) after gathering minimum <b>" + maxTries;
+        }
+      }
+      htmlOutput = htmlOutput + " nodes</b>! &nbsp;&nbsp;&nbsp; :) </p> <hr style=\"margin: -3%\">";
+    }
+
+    document.getElementById("resultNBernoulli").innerHTML = htmlOutput
+  }
+</script>
+
+<body>
+  <form>
+  <hr style="border-width:2;background-color:grey">
+  <p>
+    <b> I want to simulate </b>
+    <input type = "number" id = "ressMin" value=1 size = "5" min="1" onchange = "ressCount()">
+    <select id = "simuList" onchange = "ressCount()" >
+      <option value="0"> node(s) gathered </option>
+      <option value="1"> ressource(s) acquired </option>
+    </select>
+  </p>
+  <p>
+    Ressource(s) are of tier </b>
+    <! –– Drop rates from https://www.newworldpacifist.com/resources/rng-explained ––>
+    <! –– Values from the beta, will mostly change after v1.0.3 (https://forums.newworld.com/t/petrified-wood-and-whisper-wood-way-too-rare/311013/88) ––>
+    <! –– Drop rates for skinning does not seem to be the same ––>
+    <select id = "tierList" onchange = "tierSelection()" >
+      <option value="0"> Custom </option>
+      <! –– for T1 it depends on node size (95k, 96k or 97k) so taking the mean ––>
+      <option value="96000"> T1 </option>
+      <option value="101000"> T2/T3 </option>
+      <option value="101450"> T4 </option>
+      <option value="101800"> T5 </option>
+    </select>
+    for a min threshold <input type = "text" id = "ressMinRol" value=0 size = "5" onchange = "tierSelection()"> (d100k roll or ROL)
+  </p>
+  <hr style="border-width:2;background-color:grey">
+  <p>
+    <b> Gathering level </b>
+    <input type = "number" id = "gatheringLevel" value=0 size = "4" min="0" max="200" onchange = "computeLevelLuck()">
+    <input type="hidden" id = "levelRolBonus" value=0 size = "2" readonly>
+  </p> 
+    <p>
+      <b> Food boost </b>
+
+      <select id = "foodList" onchange = "computeFoodLuck()" >
+        <option value="0"> None </option>
+        <! –– for T1 it depends on node size (95k, 96k or 97k) so taking the mean ––>
+        <option value="1000"> T1 </option>
+        <option value="1400"> T2 </option>
+        <option value="1700"> T3 </option>
+        <option value="1900"> T4 </option>
+        <option value="2000"> T5 </option>
+      </select>
+      <input type="hidden" id = "foodRolBonus" value=0 size = "2" readonly>
+    </p>
+  <p>
+    <b> Tool % gathering luck</b> (<i>Discipline</i>)
+    <input type = "text" id = "toolGatherLuck" value=0 size = "3" onchange = "computeToolLuck()">
+    <input type="hidden" id = "toolRolBonus" value=0 size = "2" readonly>
+  </p>  
+  <p>
+    <b> Total armor % gathering luck</b> (<i>Reinforced</i>)
+    <input type = "text" id = "armorGatherLuck" value=0 size = "3" onchange = "computeArmorLuck()">
+    <input type="hidden" id = "armorRolBonus" value=0 size = "2" readonly>
+  </p>
+  <p>
+    <b> Amulet % gathering luck</b> (<i>Adored</i>) 
+    <input type = "text" id = "amuletGatherLuck" value=0 size = "2" onchange = "computeAmuletLuck()">
+    <input type="hidden" id = "amuletRolBonus" value=0 size = "2" readonly>
+  </p> 
+  <p>
+    <b> Trophy boost per house </b>
+
+    <select id = "trophyHouse1" onchange = "computeTrophyLuck()" >
+      <option value="0"> None </option>
+      <option value="500"> T2 (Minor) </option>
+      <option value="1000"> T3 (Basic) </option>
+      <option value="1500"> T4 (Major) </option>
+    </select>
+    <select id = "trophyHouse2" onchange = "computeTrophyLuck()" >
+      <option value="0"> None </option>
+      <option value="500"> T2 (Minor) </option>
+      <option value="1000"> T3 (Basic) </option>
+      <option value="1500"> T4 (Major) </option>
+    </select>
+    <select id = "trophyHouse3" onchange = "computeTrophyLuck()" >
+      <option value="0"> None </option>
+      <option value="500"> T2 (Minor) </option>
+      <option value="1000"> T3 (Basic) </option>
+      <option value="1500"> T4 (Major) </option>
+    </select>
+    <input type="hidden" id = "trophyRolBonus" value=0 size = "2" readonly>
+  </p>
+  <p>
+    <b> Do you have the territory faction bonus? </b>
+    <input type="checkbox" id="territoryBonus" onchange = "checkTerritoryBonus()">
+    <input type="hidden" id = "territoryRolBonus" value=0 size = "2" readonly>
+  </p>
+  <p>
+    <b> Have you enabled PvP? </b>
+    <input type="checkbox" id="pvpBonus" onchange = "checkPvpBonus()">
+    <input type="hidden" id = "pvpRolBonus" value=0 size = "2" readonly>
+  </p>
+  <p>
+    <b> Other raw bonus (like server events, new content, etc...) </b>
+    <input type="text" id = "miscRolBonus" value=0 size = "6" onchange = "computeBernoulli()"> (+ROL)
+  </p>
+  <p>
+    <button type="button" onclick="resetInput()">Reset!</button> 
+  </p>
+  </form>
+  <table id="recapTable" style="width:110%" style="border: none">
+    <tr style="border: 2px solid grey">
+      <td style="border: 2px solid grey">Modifier</td>
+      <td>Level</td>
+      <td>Food</td>
+      <td>Tool</td>
+      <td>Armor</td>
+      <td>Amulet</td>
+      <td>Trophy</td>
+      <td>Fation</td>
+      <td>PvP</td>
+      <td>Misc</td>
+      <td>Total</td>
+    </tr>
+    <tr style="border: 2px solid grey">
+      <td style="border: 2px solid grey">+ ROL</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </table>
+  <!-- <hr style="border-width:2;background-color:grey"> -->
+  <p id="resultNBernoulli"></p>
+                     
+  
+</body>
+</html>
+ 
