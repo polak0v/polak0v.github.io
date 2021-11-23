@@ -1,6 +1,15 @@
 <html>
+<style>
+table, th, td {
+  border: 1px solid grey;
+  table-layout:fixed;
+}
+</style>
 <head>
-<img src="https://styles.redditmedia.com/t5_3gmxe/styles/communityIcon_7ra2iqncn8641.jpg" alt="nw" style="margin: -6% 40%;" width="20%"/>
+  <a href="../index.md">Home page</a>
+  <p style="text-align:center;">
+    <img src="https://styles.redditmedia.com/t5_3gmxe/styles/communityIcon_7ra2iqncn8641.jpg" alt="nw" width="10%"/>
+  </p>
 <hr><hr>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.5.1/math.js"></script>
@@ -55,7 +64,7 @@
     var toolGatherLuck = document.getElementById("toolGatherLuck").value;
 
     // additionnal division after output from the from the nw database forum
-    document.getElementById("toolRolBonus").value = 100000*toolGatherLuck/(100*10);
+    document.getElementById("toolRolBonus").value = 100*toolGatherLuck;
     computeBernoulli()
   }
   function computeArmorLuck() {
@@ -66,7 +75,7 @@
     var armorGatherLuck = document.getElementById("armorGatherLuck").value;
 
     // additionnal division after output from the from the nw database forum
-    document.getElementById("armorRolBonus").value = 100000*armorGatherLuck/(100*10);
+    document.getElementById("armorRolBonus").value = 100*armorGatherLuck;
     computeBernoulli()
   }
   function computeAmuletLuck() {
@@ -77,7 +86,7 @@
     var amuletGatherLuck = document.getElementById("amuletGatherLuck").value;
 
     // additionnal division after output from the from the nw database forum
-    document.getElementById("amuletRolBonus").value = 100000*amuletGatherLuck/(100*10);
+    document.getElementById("amuletRolBonus").value = 100*amuletGatherLuck;
     computeBernoulli()
   }
   function computeTrophyLuck() {
@@ -105,7 +114,7 @@
     var pvpRolBonus = 0; 
     
     if(checkbox.checked)
-      pvpRolBonus = 100000*30/(100*10);  
+      pvpRolBonus = 100*30;  
     document.getElementById("pvpRolBonus").value = pvpRolBonus;
     computeBernoulli()
   }
@@ -114,6 +123,7 @@
     document.getElementById("tierList").selectedIndex = 0;
     document.getElementById("ressMin").value = 1;
     document.getElementById("ressMinRol").value = 0;
+    document.getElementById("ORMinRol").value = 0;
     document.getElementById("gatheringLevel").value = 0;
     document.getElementById("foodList").selectedIndex = 0;
     document.getElementById("toolGatherLuck").value = 0;
@@ -168,6 +178,7 @@
     var tierList = document.getElementById("tierList");
     var ressMin = document.getElementById("ressMin").value;
     var ressMinRol = document.getElementById("ressMinRol").value;
+    var ORMinRol = document.getElementById("ORMinRol").value;
     var levelRolBonus = document.getElementById("levelRolBonus").value;
     var foodRolBonus = document.getElementById("foodRolBonus").value;
     var toolRolBonus = document.getElementById("toolRolBonus").value;
@@ -182,8 +193,9 @@
     populateTable();
 
     var totalRolBonus = +levelRolBonus + +foodRolBonus + +toolRolBonus + +armorRolBonus + +amuletRolBonus + +trophyRolBonus + +territoryRolBonus + +pvpRolBonus + +miscRolBonus
-    var maxRol = maxTrueRol + totalRolBonus
-    var probTrue = (maxRol - ressMinRol)/(maxTrueRol)
+    var maxRol = maxTrueRol + +totalRolBonus
+    var probTrue = (maxRol - (+ressMinRol - 1))/(+maxTrueRol)
+    probTrue = +probTrue*((+maxRol - (+ORMinRol - 1))/(+maxTrueRol))
     if (probTrue > 1){
       probTrue = 1
     }
@@ -193,7 +205,7 @@
       var diffRol = ressMinRol - maxRol;
       htmlOutput =
         "<p style=\"color: red\"> Shame! Shame! Shame, you <b>cannot collect this " 
-        + tierList.options[tierList.selectedIndex].text + "</b> ressource! <br> You <b> lack " + diffRol + " ROL </b>. &nbsp;&nbsp;&nbsp; :'( </p> <hr style=\"margin: -3%\">";
+        + tierList.options[tierList.selectedIndex].text + "</b> ressource! <br> You <b> lack " + diffRol + " ROL </b>. &nbsp;&nbsp;&nbsp; :'( </p>";
     }
 
     else{
@@ -223,7 +235,7 @@
           break;
       }
       htmlOutput = 
-      "<p style=\"color: green\"> You have <b>" + (100*probTrue).toFixed(2) + "% </b> chance to gather the <b>" 
+      "<p style=\"color: green\"> You have <b>" + (100*probTrue).toFixed(6) + "% </b> chance to gather the <b>" 
       + tierList.options[tierList.selectedIndex].text + " ressource per node</b>!<br>";
       if (isGatherNode) {
         htmlOutput = htmlOutput + "95% probability to get <b> " + nSuccess + "</b> ressource(s) after gathering <b> at least " + ressMin;
@@ -236,7 +248,7 @@
           htmlOutput = htmlOutput + "95% probability to get <b>at least " + ressMin + "</b> ressource(s) after gathering minimum <b>" + maxTries;
         }
       }
-      htmlOutput = htmlOutput + " nodes</b>! &nbsp;&nbsp;&nbsp; :) </p> <hr style=\"margin: -3%\">";
+      htmlOutput = htmlOutput + " nodes</b>! &nbsp;&nbsp;&nbsp; :) </p>";
     }
 
     document.getElementById("resultNBernoulli").innerHTML = htmlOutput
@@ -247,8 +259,10 @@
   <form>
   <hr style="border-width:2;background-color:grey">
   <p>
-    <b> I want to simulate </b>
-    <input type = "number" id = "ressMin" value=1 size = "5" min="1" onchange = "ressCount()">
+    <span title="You can simulate if you want to get a number of the ressource, of after gathering a certain amount of nodes.">
+      <b> I want to simulate </b>
+      <input type="number" id="ressMin" value=1 size="5" min=1 onchange="ressCount()">
+    </span>
     <select id = "simuList" onchange = "ressCount()" >
       <option value="0"> node(s) gathered </option>
       <option value="1"> ressource(s) acquired </option>
@@ -267,7 +281,19 @@
       <option value="101450"> T4 </option>
       <option value="101800"> T5 </option>
     </select>
-    for a min threshold <input type = "text" id = "ressMinRol" value=0 size = "5" onchange = "tierSelection()"> (d100k roll or ROL)
+    <span title="This is the minimum number of ROL you will need. You cand find it when searching for a ressource on NWDB.
+
+Ex: Void ore is 1800 + 100000 = 101800 (T5).">
+     for a min threshold <input type = "number" id = "ressMinRol" min=0 value=0 size="5" step=100 onchange = "tierSelection()"> (d100k roll or ROL)
+    </span>
+  </p>
+  <p>
+    <span title="This is an aditionnal probability for some (rare) ressources, most of the common ressources doesn't use that (leave it to 0).
+    
+Ex: Void ore is 100001.">
+      Additionnal (OR) <a href="https://github.com/Kattoor/nw-datasheets-json/blob/b9c664b946fb234fdb455295d42c86f28c010f02/javelindata_loottables.json#L2255-L2280">loot table</a>
+      <input type = "number" id = "ORMinRol" min=0 value=0 size="5" step=100 onchange = "computeBernoulli()">
+    </span>
   </p>
   <hr style="border-width:2;background-color:grey">
   <p>
@@ -305,27 +331,28 @@
     <input type="hidden" id = "amuletRolBonus" value=0 size = "2" readonly>
   </p> 
   <p>
-    <b> Trophy boost per house </b>
-
-    <select id = "trophyHouse1" onchange = "computeTrophyLuck()" >
-      <option value="0"> None </option>
-      <option value="500"> T2 (Minor) </option>
-      <option value="1000"> T3 (Basic) </option>
-      <option value="1500"> T4 (Major) </option>
-    </select>
-    <select id = "trophyHouse2" onchange = "computeTrophyLuck()" >
-      <option value="0"> None </option>
-      <option value="500"> T2 (Minor) </option>
-      <option value="1000"> T3 (Basic) </option>
-      <option value="1500"> T4 (Major) </option>
-    </select>
-    <select id = "trophyHouse3" onchange = "computeTrophyLuck()" >
-      <option value="0"> None </option>
-      <option value="500"> T2 (Minor) </option>
-      <option value="1000"> T3 (Basic) </option>
-      <option value="1500"> T4 (Major) </option>
-    </select>
-    <input type="hidden" id = "trophyRolBonus" value=0 size = "2" readonly>
+    <span title="You can have up to 3 houses at the time of writing (release 1.1).">
+      <b> Trophy boost per house </b>
+      <select id = "trophyHouse1" onchange = "computeTrophyLuck()" >
+        <option value="0"> None </option>
+        <option value="500"> T2 (Minor) </option>
+        <option value="1000"> T3 (Basic) </option>
+        <option value="1500"> T4 (Major) </option>
+      </select>
+      <select id = "trophyHouse2" onchange = "computeTrophyLuck()" >
+        <option value="0"> None </option>
+        <option value="500"> T2 (Minor) </option>
+        <option value="1000"> T3 (Basic) </option>
+        <option value="1500"> T4 (Major) </option>
+      </select>
+      <select id = "trophyHouse3" onchange = "computeTrophyLuck()" >
+        <option value="0"> None </option>
+        <option value="500"> T2 (Minor) </option>
+        <option value="1000"> T3 (Basic) </option>
+        <option value="1500"> T4 (Major) </option>
+      </select>
+      <input type="hidden" id = "trophyRolBonus" value=0 size = "2" readonly>
+    </span>
   </p>
   <p>
     <b> Do you have the territory faction bonus? </b>
@@ -333,9 +360,11 @@
     <input type="hidden" id = "territoryRolBonus" value=0 size = "2" readonly>
   </p>
   <p>
-    <b> Have you enabled PvP? </b>
-    <input type="checkbox" id="pvpBonus" onchange = "checkPvpBonus()">
-    <input type="hidden" id = "pvpRolBonus" value=0 size = "2" readonly>
+    <span title="Insane gathering luck bonus after flagging for PvP (release 1.1).">
+      <b> Have you enabled PvP? </b>
+      <input type="checkbox" id="pvpBonus" onchange = "checkPvpBonus()">
+      <input type="hidden" id = "pvpRolBonus" value=0 size = "2" readonly>
+    </span>
   </p>
   <p>
     <b> Other raw bonus (like server events, new content, etc...) </b>
@@ -345,9 +374,9 @@
     <button type="button" onclick="resetInput()">Reset!</button> 
   </p>
   </form>
-  <table id="recapTable" style="width:110%" style="border: none">
-    <tr style="border: 2px solid grey">
-      <td style="border: 2px solid grey">Modifier</td>
+  <table id="recapTable" style="width:75%">
+    <tr>
+      <td>Modifier</td>
       <td>Level</td>
       <td>Food</td>
       <td>Tool</td>
@@ -359,8 +388,8 @@
       <td>Misc</td>
       <td>Total</td>
     </tr>
-    <tr style="border: 2px solid grey">
-      <td style="border: 2px solid grey">+ ROL</td>
+    <tr>
+      <td>+ ROL</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -375,8 +404,10 @@
   </table>
   <!-- <hr style="border-width:2;background-color:grey"> -->
   <p id="resultNBernoulli"></p>
-                     
-  
+  <p></p>
 </body>
+<footer>
+  <a href="https://en.cryptobadges.io/donate/12eAEKU4rgvhLCxvdkxKJYocJdEFRyNrta">Support me</a>
+</footer>
 </html>
  
