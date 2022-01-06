@@ -57,8 +57,8 @@ table, th, td {
     computeBernoulli()
   }
   function computeToolLuck() {
-    if (document.getElementById("toolGatherLuck").value > 9.4)
-      document.getElementById("toolGatherLuck").value = 9.4;
+    if (document.getElementById("toolGatherLuck").value > 9.27)
+      document.getElementById("toolGatherLuck").value = 9.27;
     if (document.getElementById("toolGatherLuck").value < 0)
       document.getElementById("toolGatherLuck").value = 0;
     var toolGatherLuck = document.getElementById("toolGatherLuck").value;
@@ -68,8 +68,8 @@ table, th, td {
     computeBernoulli()
   }
   function computeArmorLuck() {
-    if (document.getElementById("armorGatherLuck").value > 47.5)
-      document.getElementById("armorGatherLuck").value = 47.5;
+    if (document.getElementById("armorGatherLuck").value > 25.0)
+      document.getElementById("armorGatherLuck").value = 25.0;
     if (document.getElementById("armorGatherLuck").value < 0)
       document.getElementById("armorGatherLuck").value = 0;
     var armorGatherLuck = document.getElementById("armorGatherLuck").value;
@@ -79,8 +79,8 @@ table, th, td {
     computeBernoulli()
   }
   function computeAmuletLuck() {
-    if (document.getElementById("amuletGatherLuck").value > 9.5)
-      document.getElementById("amuletGatherLuck").value = 9.5;
+    if (document.getElementById("amuletGatherLuck").value > 9.55)
+      document.getElementById("amuletGatherLuck").value = 9.55;
     if (document.getElementById("amuletGatherLuck").value < 0)
       document.getElementById("amuletGatherLuck").value = 0;
     var amuletGatherLuck = document.getElementById("amuletGatherLuck").value;
@@ -98,15 +98,6 @@ table, th, td {
     var trophyRolBonus3 = trophyList3.options[trophyList3.selectedIndex].value
     
     document.getElementById("trophyRolBonus").value = +trophyRolBonus1 + +trophyRolBonus2 + +trophyRolBonus3;
-    computeBernoulli()
-  }
-  function checkTerritoryBonus() {
-    var checkbox = document.getElementById("territoryBonus");
-    var territoryRolBonus = 0; 
-    
-    if(checkbox.checked)
-      territoryRolBonus = 50;  
-    document.getElementById("territoryRolBonus").value = territoryRolBonus;
     computeBernoulli()
   }
   function checkPvpBonus() {
@@ -132,7 +123,6 @@ table, th, td {
     document.getElementById("trophyHouse1").selectedIndex = 0;
     document.getElementById("trophyHouse2").selectedIndex = 0;
     document.getElementById("trophyHouse3").selectedIndex = 0;
-    document.getElementById("territoryBonus").checked = 0;
     document.getElementById("pvpBonus").checked = 0;
     document.getElementById("miscRolBonus").value = 0;
 
@@ -143,7 +133,6 @@ table, th, td {
     computeArmorLuck();
     computeAmuletLuck();
     computeTrophyLuck()
-    checkTerritoryBonus();
     checkPvpBonus();
     document.getElementById("resultNBernoulli").innerHTML = "";
   }
@@ -155,22 +144,20 @@ table, th, td {
     var armorRolBonus = document.getElementById("armorRolBonus").value;
     var amuletRolBonus = document.getElementById("amuletRolBonus").value;
     var trophyRolBonus = document.getElementById("trophyRolBonus").value;
-    var territoryRolBonus = document.getElementById("territoryRolBonus").value;
     var pvpRolBonus = document.getElementById("pvpRolBonus").value;
     var miscRolBonus = document.getElementById("miscRolBonus").value;
-    var totalRolBonus = +levelRolBonus + +foodRolBonus + +toolRolBonus + +armorRolBonus + +amuletRolBonus + +trophyRolBonus + +territoryRolBonus + +pvpRolBonus + +miscRolBonus
+    var totalRolBonus = +levelRolBonus + +foodRolBonus + +toolRolBonus + +armorRolBonus + +amuletRolBonus + +trophyRolBonus + +pvpRolBonus + +miscRolBonus
 
     var cells = table.rows.item(1).cells;
-    cells.item(1).innerHTML = levelRolBonus;
-    cells.item(2).innerHTML = foodRolBonus;
-    cells.item(3).innerHTML = toolRolBonus;
-    cells.item(4).innerHTML = armorRolBonus;
-    cells.item(5).innerHTML = amuletRolBonus;
-    cells.item(6).innerHTML = trophyRolBonus;
-    cells.item(7).innerHTML = territoryRolBonus;
-    cells.item(8).innerHTML = pvpRolBonus;
-    cells.item(9).innerHTML = miscRolBonus;
-    cells.item(10).innerHTML = totalRolBonus;
+    cells.item(1).innerHTML = parseInt(levelRolBonus);
+    cells.item(2).innerHTML = parseInt(foodRolBonus);
+    cells.item(3).innerHTML = parseInt(toolRolBonus);
+    cells.item(4).innerHTML = parseInt(armorRolBonus);
+    cells.item(5).innerHTML = parseInt(amuletRolBonus);
+    cells.item(6).innerHTML = parseInt(trophyRolBonus);
+    cells.item(7).innerHTML = parseInt(pvpRolBonus);
+    cells.item(8).innerHTML = parseInt(miscRolBonus);
+    cells.item(9).innerHTML = parseInt(totalRolBonus);
   }
   function computeBernoulli() {
     var simuList = document.getElementById("simuList");
@@ -185,17 +172,16 @@ table, th, td {
     var armorRolBonus = document.getElementById("armorRolBonus").value;
     var amuletRolBonus = document.getElementById("amuletRolBonus").value;
     var trophyRolBonus = document.getElementById("trophyRolBonus").value;
-    var territoryRolBonus = document.getElementById("territoryRolBonus").value;
     var pvpRolBonus = document.getElementById("pvpRolBonus").value;
     var miscRolBonus = document.getElementById("miscRolBonus").value;
     var maxTrueRol = 1e5;
     let htmlOutput = "";
     populateTable();
 
-    var totalRolBonus = +levelRolBonus + +foodRolBonus + +toolRolBonus + +armorRolBonus + +amuletRolBonus + +trophyRolBonus + +territoryRolBonus + +pvpRolBonus + +miscRolBonus
+    var totalRolBonus = +levelRolBonus + +foodRolBonus + +toolRolBonus + +armorRolBonus + +amuletRolBonus + +trophyRolBonus + +pvpRolBonus + +miscRolBonus
     var maxRol = maxTrueRol + +totalRolBonus
-    var probTrue = (maxRol - (+ressMinRol - 1))/(+maxTrueRol)
-    probTrue = +probTrue*((+maxRol - (+ORMinRol - 1))/(+maxTrueRol))
+    var probTrue = (maxRol - +ressMinRol)/(+maxTrueRol)
+    probTrue = +probTrue*((+maxRol - +ORMinRol)/(+maxTrueRol))
     if (probTrue > 1){
       probTrue = 1
     }
@@ -284,7 +270,7 @@ table, th, td {
     <span title="This is the minimum number of ROL you will need. You cand find it when searching for a ressource on NWDB.
 
 Ex: Void ore is 1800 + 100000 = 101800 (T5).">
-     for a min threshold <input type = "number" id = "ressMinRol" min=0 value=0 size="5" step=100 onchange = "tierSelection()"> (d100k roll or ROL)
+     for a min threshold <input type = "number" id = "ressMinRol" min=0 value=0 size="8" step=100 onchange = "tierSelection()"> (d100k roll or ROL)
     </span>
   </p>
   <p>
@@ -292,7 +278,7 @@ Ex: Void ore is 1800 + 100000 = 101800 (T5).">
     
 Ex: Void ore is 100001.">
       Additionnal (OR) <a href="https://github.com/Kattoor/nw-datasheets-json/blob/b9c664b946fb234fdb455295d42c86f28c010f02/javelindata_loottables.json#L2255-L2280">loot table</a>
-      <input type = "number" id = "ORMinRol" min=0 value=0 size="5" step=100 onchange = "computeBernoulli()">
+      <input type = "number" id = "ORMinRol" min=0 value=0 size="8" step=100 onchange = "computeBernoulli()">
     </span>
   </p>
   <hr style="border-width:2;background-color:grey">
@@ -316,19 +302,25 @@ Ex: Void ore is 100001.">
       <input type="hidden" id = "foodRolBonus" value=0 size = "2" readonly>
     </p>
   <p>
-    <b> Tool % gathering luck</b> (<i>Discipline</i>)
-    <input type = "text" id = "toolGatherLuck" value=0 size = "3" onchange = "computeToolLuck()">
-    <input type="hidden" id = "toolRolBonus" value=0 size = "2" readonly>
+    <span title="Maximum is 9.27%">
+      <b> Tool % gathering luck</b> (<i>Discipline</i>)
+      <input type = "text" id = "toolGatherLuck" value=0 size = "3" onchange = "computeToolLuck()">
+      <input type="hidden" id = "toolRolBonus" value=0 size = "2" readonly>
+    </span>
   </p>  
   <p>
-    <b> Total armor % gathering luck</b> (<i>Reinforced</i>)
-    <input type = "text" id = "armorGatherLuck" value=0 size = "3" onchange = "computeArmorLuck()">
-    <input type="hidden" id = "armorRolBonus" value=0 size = "2" readonly>
+    <span title="Maximum is 5*5%">
+      <b> Total armor % gathering luck</b> (<i>Reinforced</i>)
+      <input type = "text" id = "armorGatherLuck" value=0 size = "3" onchange = "computeArmorLuck()">
+      <input type="hidden" id = "armorRolBonus" value=0 size = "2" readonly>
+    </span>
   </p>
   <p>
-    <b> Amulet % gathering luck</b> (<i>Adored</i>) 
-    <input type = "text" id = "amuletGatherLuck" value=0 size = "2" onchange = "computeAmuletLuck()">
-    <input type="hidden" id = "amuletRolBonus" value=0 size = "2" readonly>
+    <span title="Maximum is 9.55%">
+      <b> Amulet % gathering luck</b> (<i>Adored</i>) 
+      <input type = "text" id = "amuletGatherLuck" value=0 size = "2" onchange = "computeAmuletLuck()">
+      <input type="hidden" id = "amuletRolBonus" value=0 size = "2" readonly>
+    </span>
   </p> 
   <p>
     <span title="You can have up to 3 houses at the time of writing (release 1.1).">
@@ -355,11 +347,6 @@ Ex: Void ore is 100001.">
     </span>
   </p>
   <p>
-    <b> Do you have the territory faction bonus? </b>
-    <input type="checkbox" id="territoryBonus" onchange = "checkTerritoryBonus()">
-    <input type="hidden" id = "territoryRolBonus" value=0 size = "2" readonly>
-  </p>
-  <p>
     <span title="Insane gathering luck bonus after flagging for PvP (release 1.1).">
       <b> Have you enabled PvP? </b>
       <input type="checkbox" id="pvpBonus" onchange = "checkPvpBonus()">
@@ -383,14 +370,12 @@ Ex: Void ore is 100001.">
       <td>Armor</td>
       <td>Amulet</td>
       <td>Trophy</td>
-      <td>Fation</td>
       <td>PvP</td>
       <td>Misc</td>
       <td>Total</td>
     </tr>
     <tr>
       <td>+ ROL</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -407,7 +392,7 @@ Ex: Void ore is 100001.">
   <p></p>
 </body>
 <footer>
- <i>By @Zancryn (Caelum FR/EN). Thanks to nwdb/discord members. <a href="https://en.cryptobadges.io/donate/12eAEKU4rgvhLCxvdkxKJYocJdEFRyNrta">Support me</a></i> 
+ <i>By @Zancryn (Caelum FR/EN). Thanks to nwdb/discord members.</i> 
 </footer>
 </html>
  
